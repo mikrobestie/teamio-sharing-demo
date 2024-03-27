@@ -1,0 +1,8 @@
+### Get list of customers using thecustom list API
+GET localhost:8080/api/customer/list?page=1&size=10
+
+### Get list of customers using the findAll()
+GET localhost:8080/api/customer/all?page=0&size=10
+
+### Get list of customers using JPA criteria API + paging
+GET localhost:8080/api/customer?firstName=Tara&page=0&size=10
