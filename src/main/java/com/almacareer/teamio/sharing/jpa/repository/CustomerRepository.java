@@ -1,6 +1,8 @@
 package com.almacareer.teamio.sharing.jpa.repository;
 
 import com.almacareer.teamio.sharing.jpa.entity.Customer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +19,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             """, nativeQuery = true)
     List<Customer> findAll(int offset, int limit);
 
+    Page<Customer> findAllByFirstName(String name, Pageable pageable);
 }

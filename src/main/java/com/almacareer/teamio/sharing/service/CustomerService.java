@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,8 @@ public class CustomerService {
     }
 
     /**
-     * Find page of customers.
+     * Find page of customers. Using the standard JPA repository
+     * {@link org.springframework.data.jpa.repository.JpaRepository#findAll(Pageable)}
      *
      * @param page Page
      * @param size Page size
@@ -43,6 +45,17 @@ public class CustomerService {
      */
     public Page<Customer> findAllCustomers(int page, int size) {
         return customerRepository.findAll(PageRequest.of(page, size));
+    }
+
+    /**
+     * Find all customers by first name, paged. Using the standard JPA repository + query method.
+     *
+     * @param page Page
+     * @param size Page size
+     * @return Page of customers
+     */
+    public Page<Customer> findCustomersByFirstName(String name, int page, int size) {
+        return customerRepository.findAllByFirstName(name, PageRequest.of(page, size));
     }
 
     /**

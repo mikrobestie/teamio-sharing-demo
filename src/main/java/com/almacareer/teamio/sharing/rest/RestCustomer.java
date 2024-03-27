@@ -6,6 +6,7 @@ import com.almacareer.teamio.sharing.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +42,19 @@ public class RestCustomer {
     @GetMapping("/all")
     public SimplePage<Customer> getCustomers(@RequestParam int page, @RequestParam int size) {
         return simplePage(customerService.findAllCustomers(page, size));
+    }
+
+    /**
+     * Get page of customers with filtering.
+     *
+     * @param name   First name
+     * @param page   Page number
+     * @param size   Page size
+     * @return Page of customers
+     */
+    @GetMapping("/firstName/{name}")
+    public SimplePage<Customer> findCustomersByFirstName(@PathVariable String name, @RequestParam int page, @RequestParam int size) {
+        return simplePage(customerService.findCustomersByFirstName(name, page, size));
     }
 
     /**
