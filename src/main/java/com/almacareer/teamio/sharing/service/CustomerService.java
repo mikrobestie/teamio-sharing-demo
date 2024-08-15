@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +67,9 @@ public class CustomerService {
      * @return Page of customers
      */
     public Page<Customer> findCustomers(CustomerFilter filter, int page, int size) {
-        return customerJpaSpecificationRepository.findAll(where(spec(filter)), PageRequest.of(page, size));
+        return customerJpaSpecificationRepository.findAll(
+                where(spec(filter)),
+                PageRequest.of(page, size).withSort(Sort.by("id")));
     }
 
     static Specification<Customer> spec(CustomerFilter filter) {

@@ -8,15 +8,13 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.SequencedMap;
-import java.util.SequencedSet;
 import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Examples of old collections "sequenced" usage.
  */
+@SuppressWarnings({"SequencedCollectionMethodCanBeUsed", "java:S2699"})
 class OldCollectionsTest {
 
     @Test
