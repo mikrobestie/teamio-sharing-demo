@@ -4,18 +4,24 @@ import com.almacareer.teamio.sharing.jpa.entity.Customer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
-import eu.lmc.base.spring.beans.database.H2TruncateTablesAfterTestMethodExecutionListener;
+import jakarta.persistence.EntityManager;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.DockerClientFactory;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,8 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @TestExecutionListeners(listeners = {
         DbUnitTestExecutionListener.class,
-        H2TruncateTablesAfterTestMethodExecutionListener.class
+        PostgresTruncateTablesTestListener.class
 }, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
+@Import(RestCustomerTest.PostgresContainerConfiguration.class)
 @DatabaseSetup("/dbunit/dataset.xml")
 class RestCustomerTest {
 
@@ -41,6 +48,18 @@ class RestCustomerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private EntityManager entityManager;
+
+    /**
+     * Just check PostgreSQL version.
+     */
+    @Test
+    void testVerifyDatabaseVersion() {
+        Object result = entityManager.createNativeQuery("SELECT version()").getSingleResult();
+        assertEquals("PostgreSQL 11.22 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 13.2.1_git20231014) 13.2.1 20231014, 64-bit", result);
+    }
 
     /**
      * Test search with returning JSON string and using classic `assertEquals`.
@@ -190,5 +209,20 @@ class RestCustomerTest {
         private int size;
         private int totalPages;
         private int totalItems;
+    }
+
+    public static class PostgresContainerConfiguration {
+
+        static {
+            // Optional - ensure Docker is running
+            DockerClientFactory.instance().client();
+        }
+
+        @Bean
+        @ServiceConnection
+        public PostgreSQLContainer<?> postgresContainer() {
+            return new PostgreSQLContainer<>("postgres:11.22-alpine")
+                    .withTmpFs(Map.of("/var/lib/postgresql/data", "rw")); // Improve performance
+        }
     }
 }
