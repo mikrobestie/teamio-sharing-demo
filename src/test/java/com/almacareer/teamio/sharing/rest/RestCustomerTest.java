@@ -2,12 +2,17 @@ package com.almacareer.teamio.sharing.rest;
 
 import com.almacareer.teamio.sharing.jpa.entity.Customer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.springtestdbunit.DbUnitTestExecutionListener;
+import com.github.springtestdbunit.annotation.DatabaseSetup;
+import eu.lmc.base.spring.beans.database.H2TruncateTablesAfterTestMethodExecutionListener;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -23,6 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
+@TestExecutionListeners(listeners = {
+        DbUnitTestExecutionListener.class,
+        H2TruncateTablesAfterTestMethodExecutionListener.class
+}, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
+@DatabaseSetup("/dbunit/dataset.xml")
 class RestCustomerTest {
 
     @Autowired
