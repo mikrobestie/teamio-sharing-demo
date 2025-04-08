@@ -1,5 +1,19 @@
+buildscript {
+    ext {
+//        beansVersion = '3.16-1-g4c3d6b1'
+        beansVersion = '3.16'
+    }
+    repositories {
+        maven { url 'https://nexus.service.consul/repository/maven-lmc' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath "eu.lmc.base:spring-beans:${beansVersion}"
+    }
+}
+
 plugins {
-    id 'org.springframework.boot' version '3.2.4'
+    id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
@@ -12,6 +26,7 @@ java {
 }
 
 repositories {
+    maven { url 'https://nexus.service.consul/repository/maven-lmc' }
     mavenCentral()
 }
 
@@ -19,6 +34,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // spring-beans
+    implementation "eu.lmc.base:spring-beans:${beansVersion}"
+
+    // RestEasy
+    implementation "org.jboss.resteasy:resteasy-client:6.2.10.Final"
+    implementation "org.jboss.resteasy:resteasy-jackson2-provider:6.2.10.Final"
 
     // H2
     runtimeOnly 'com.h2database:h2'

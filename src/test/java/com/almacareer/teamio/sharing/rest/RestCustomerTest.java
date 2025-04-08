@@ -129,7 +129,6 @@ class RestCustomerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("""
                         {
-                            "page": 1,
                             "items": [
                                 {
                                     "id": 3
@@ -137,7 +136,8 @@ class RestCustomerTest {
                                 {
                                     "id": 4
                                 }
-                            ]
+                            ],
+                            "page": 1
                         }
                         """));
     }
@@ -156,7 +156,6 @@ class RestCustomerTest {
                         {
                           "items": [
                             {
-                              "id": 3,
                               "firstName": "Tom",
                               "lastName": "Smith"
                             },
