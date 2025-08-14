@@ -1,10 +1,16 @@
 buildscript {
     ext {
-//        beansVersion = '3.16-1-g4c3d6b1'
-        beansVersion = '3.16'
+        beansVersion = '3.30'
     }
     repositories {
-        maven { url 'https://nexus.service.consul/repository/maven-lmc' }
+        mavenLocal()
+        maven {
+            url = 'https://teamio-654654474994.d.codeartifact.eu-west-1.amazonaws.com/maven/maven-group/'
+            credentials {
+                username = "aws"
+                password = project.properties['codeartifact.token']
+            }
+        }
         mavenCentral()
     }
     dependencies {
@@ -13,8 +19,8 @@ buildscript {
 }
 
 plugins {
-    id 'org.springframework.boot' version '3.3.5'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '3.5.4'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'java'
 }
 
@@ -26,21 +32,32 @@ java {
 }
 
 repositories {
-    maven { url 'https://nexus.service.consul/repository/maven-lmc' }
+    mavenLocal()
+    maven {
+        url = 'https://teamio-654654474994.d.codeartifact.eu-west-1.amazonaws.com/maven/maven-group/'
+        credentials {
+            username = "aws"
+            password = project.properties['codeartifact.token']
+        }
+    }
     mavenCentral()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // spring-beans
     implementation "eu.lmc.base:spring-beans:${beansVersion}"
 
     // RestEasy
-    implementation "org.jboss.resteasy:resteasy-client:6.2.10.Final"
-    implementation "org.jboss.resteasy:resteasy-jackson2-provider:6.2.10.Final"
+    implementation "org.jboss.resteasy:resteasy-client:6.2.12.Final"
+    implementation "org.jboss.resteasy:resteasy-jackson2-provider:6.2.12.Final"
+
+    // Tracing
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
     // H2
     runtimeOnly 'com.h2database:h2'
